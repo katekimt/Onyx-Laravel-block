@@ -15,15 +15,28 @@ use App\Http\Controllers\PostController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/contact', function () {
+    return view('contact');
 });
 
+Route::post('/contact/submit', [UserController::class, 'store'])->name('contact-form');
+
+Route::get('/add/page', function () {
+    return view('addPage');
+});
+
+Route::post('/add/page/submit', [UserController::class, 'addPage'])->name('addPage-form');
+
+Route::get('/ok', function () {
+    return view('success');
+})->name('ok');
 
 Route::get('/profile', [UserController::class, 'index'])->middleware('auth');
 
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
+
+Route::get('/update', [UserController::class, 'update']);
 
 Route::resource('/post', PostController::class);
