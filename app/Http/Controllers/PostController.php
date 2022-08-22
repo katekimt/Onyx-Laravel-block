@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class PostController extends Controller
 {
@@ -17,16 +20,6 @@ class PostController extends Controller
         echo '1';
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
@@ -34,21 +27,20 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
+
+
+    public function show()
     {
-        //
+        $posts = Post::paginate(3);
+       // dd($posts);
+        return view('index',compact('posts'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Post  $post
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Post $post)
+
+    public function update($id)
     {
-        //
+        $post = new Post;
+        return view('update-post', ['post' => $post->find($id)]);
     }
 
     /**
@@ -60,5 +52,48 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         //
+    }
+
+    public function store(PostRequest $request)
+    {
+        $post = new Post();
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $path = $file->store('files');
+            $post->create(['file' => 'storage/public/files/' . $path ,
+                'title' => $request->input('title'),
+                'keywords' => $request->input('keywords'),
+                'text' => $request->input('text')]);
+        } else {
+            $post->title = $request->input('title');
+            $post->keywords = $request->input('keywords');
+            $post->text = $request->input('text');
+            $post->save();
+        }
+        return redirect()->route('ok')->with('success', "Data has been added");
+    }
+
+    public function showOnePost($id){
+        $post = new Post;
+        return view('post', ['post' => $post->find($id)]);
+    }
+
+    public function updatePost($id, PostRequest $request){
+        $post =  Post::find($id);
+        if ($request->hasFile('file')) {
+            $file = $request->file('file');
+            $path = $file->store('files');
+            $post->create(['file' => '/"/storage/files/' . $path . '/"',
+                'title' => $request->input('title'),
+                'keywords' => $request->input('keywords'),
+                'text' => $request->input('text')]);
+        } else {
+            $post->title = $request->input('title');
+            $post->keywords = $request->input('keywords');
+            $post->text = $request->input('text');
+            $post->save();
+        }
+        return redirect()->route('post-data-one', $id)->with('success', "Data has been updated");
+
     }
 }

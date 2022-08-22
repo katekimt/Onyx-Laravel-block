@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite(['resources/js/app.js'])
 
-    <title>All posts</title>
+    <title>Update post</title>
 </head>
 <body>
 
@@ -21,25 +21,25 @@
     </div>
 @endif
 
-<form  action="{{route('addPage-form')}}" method="post" enctype="multipart/form-data">
+<form  action="{{route('post-update-data', $post->id)}}" method="post" enctype="multipart/form-data">
     @csrf
     <div  class="form-group global">
         <label for="name">Input title</label>
-        <input type="text" name="title" placeholder="Input title" id = "title" class="form-control">
+        <input type="text" name="title" value="{{$post->title}}" placeholder="Input title" id = "title" class="form-control">
     </div>
     <div  class="form-group global">
         <label>Input keywords</label>
-        <input type="text" name="keywords" placeholder="Input keywords" id = "keywords" class="form-control">
+        <input type="text" name="keywords" value="{{$post->keywords}}" placeholder="Input keywords" id = "keywords" class="form-control">
     </div>
     <div  class="form-group global">
         <label>Input text</label>
-        <input type="text" name="text" placeholder="Input text" id = "text" class="form-control">
+        <input type="text" name="text" value="{{$post->text}}" placeholder="Input text" id = "text" class="form-control">
     </div>
     <div  class="form-group global">
         <label>Download file</label>
         <input type="file" name="file" placeholder="Download file" id = "file" class="form-control">
     </div>
-    <button type="submit" class="btn btn-success global">Send</button>
+    <button type="submit" class="btn btn-success global">Update</button>
 </form>
 </body>
 </html>

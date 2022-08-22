@@ -3,9 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Password;
 
-class ContactRequest extends FormRequest
+class PostRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,17 +24,10 @@ class ContactRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
-            'email' => 'required|email|unique:contacts,email',
-            'password'=>['nullable','confirmed', Password::min(8)->mixedCase(), Password::min(8)->numbers()],
-
+            'title' => 'required|min:5|max:150',
+            'keywords' => 'nullable',
+            'text'=>'required|min:10',
+            'file'=>'image:jpeg,gif,png|nullable',
         ];
     }
-
-    /*public function messages()
-    {
-        return [
-            'name.required' => 'You need to fill in the field with the name',
-        ];
-    }*/
 }

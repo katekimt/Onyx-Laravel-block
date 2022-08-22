@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PostController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -15,28 +17,31 @@ use App\Http\Controllers\PostController;
 |
 */
 
-Route::get('/contact', function () {
-    return view('contact');
-});
+Route::get('/', [PostController::class, 'show']);
 
-Route::post('/contact/submit', [UserController::class, 'store'])->name('contact-form');
+Route::get('/logout', function () {
+    Auth::logout();
+    return redirect('/');
+});
 
 Route::get('/add/page', function () {
     return view('addPage');
-});
+})->middleware('auth');;
 
-Route::post('/add/page/submit', [UserController::class, 'addPage'])->name('addPage-form');
+Route::post('/add/page/submit', [PostController::class, 'store'])->name('addPage-form');
 
 Route::get('/ok', function () {
     return view('success');
 })->name('ok');
 
-Route::get('/profile', [UserController::class, 'index'])->middleware('auth');
+//Route::get('/profile', [UserController::class, 'index'])->middleware('auth');
 
 Auth::routes();
 
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('/update', [UserController::class, 'update']);
+Route::get('/post/{id}', [PostController::class, 'showOnePost'])->name('post-data-one');
 
-Route::resource('/post', PostController::class);
+Route::get('/post/{id}/update', [PostController::class, 'update'])->name('post-update');
+
+Route::post('/post/{id}/update', [PostController::class, 'updatePost'])->name('post-update-data');
