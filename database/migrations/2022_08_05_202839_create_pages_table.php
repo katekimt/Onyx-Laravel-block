@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('title');
             $table->string('keywords');
             $table->text('text');
-            $table->string('file');
+            $table->string('file')->nullable();
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }

@@ -7,6 +7,7 @@ use App\Http\Requests\PostRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\PostResource;
 
 class PostController extends Controller
 {
@@ -24,7 +25,7 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Post  $post
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
 
@@ -32,8 +33,8 @@ class PostController extends Controller
     public function show()
     {
         $posts = Post::paginate(3);
-       // dd($posts);
-        return view('index',compact('posts'));
+        // dd($posts);
+        return view('index', compact('posts'));
     }
 
 
@@ -46,7 +47,7 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Post  $post
+     * @param \App\Models\Post $post
      * @return \Illuminate\Http\Response
      */
     public function destroy(Post $post)
@@ -60,7 +61,7 @@ class PostController extends Controller
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $path = $file->store('files');
-            $post->create(['file' => 'storage/public/files/' . $path ,
+            $post->create(['file' => 'storage/public/files/' . $path,
                 'title' => $request->input('title'),
                 'keywords' => $request->input('keywords'),
                 'text' => $request->input('text')]);
@@ -73,13 +74,15 @@ class PostController extends Controller
         return redirect()->route('ok')->with('success', "Data has been added");
     }
 
-    public function showOnePost($id){
+    public function showOnePost($id)
+    {
         $post = new Post;
         return view('post', ['post' => $post->find($id)]);
     }
 
-    public function updatePost($id, PostRequest $request){
-        $post =  Post::find($id);
+    public function updatePost($id, PostRequest $request)
+    {
+        $post = Post::find($id);
         if ($request->hasFile('file')) {
             $file = $request->file('file');
             $path = $file->store('files');
@@ -96,4 +99,20 @@ class PostController extends Controller
         return redirect()->route('post-data-one', $id)->with('success', "Data has been updated");
 
     }
+
+    public function findPost()
+    {
+        $keywords = 'title';
+        $query = PostResource::collection(Post::where('title', 'like', $keywords . '%')
+            ->orWhere('title', 'like', '%' . $keywords . '%')
+            ->orWhere('title', 'like', '%' . $keywords)
+            ->orWhere('text', 'like', '%' . $keywords . '%')
+            ->where('text', 'like', $keywords . '%')
+            ->orWhere('text', 'like', '%' . $keywords . '%')
+            ->limit(2)
+            ->get());
+        return $query;
+    }
+
+
 }
