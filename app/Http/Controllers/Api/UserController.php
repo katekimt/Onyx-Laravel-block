@@ -5,30 +5,29 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-
+use App\Http\Requests\UserRequest;
 
 class UserController extends Controller
 {
-    public function index(): string
+    public function index()
     {
-        return User::all();
+        return UserResource::collection(User::all());
     }
 
-    public function update(Request $req)
+    public function update(UserRequest $request, User $user)
     {
-
+        $user->update($request->validated());
+        return new UserResource($user);
     }
 
-    public function findEmail(): AnonymousResourceCollection
+    public function findEmail($word): AnonymousResourceCollection
     {
-        $words = 'ka';
-        $query = UserResource::collection(User::where('email', 'like', $words.'%')
-            ->orWhere('email', 'like', '%'.$words.'%')
-            ->get());
-        return $query;
+        $query = User::where('email', 'like', $word . '%')
+            ->orWhere('email', 'like', '%' . $word . '%')
+            ->get();
+        return UserResource::collection($query);
     }
 
     public function findPostByUser($id): UserResource
@@ -36,5 +35,14 @@ class UserController extends Controller
         return new UserResource(User::with('posts')->findOrFail($id));
     }
 
+    public function store(UserRequest $request): UserResource
+    {
+        $created_user = User::create($request->validated());
+        return new UserResource($created_user);
+    }
 
+    public function show(User $user): UserResource
+    {
+        return new UserResource($user);
+    }
 }

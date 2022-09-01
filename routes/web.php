@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PostController;
 use Illuminate\Support\Facades\Route;
 
 

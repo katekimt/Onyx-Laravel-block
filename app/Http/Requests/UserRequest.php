@@ -3,8 +3,10 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Auth\Passwords;
 
-class PostRequest extends FormRequest
+class UserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,12 +25,11 @@ class PostRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'title' => 'required|min:5|max:150',
-            'keywords' => 'nullable',
-            'text'=>'required|min:10',
-            'file'=>'image:jpeg,gif,png|nullable',
 
+        return [
+            'name' => 'required',
+            'email' => 'required|email|unique:contacts,email',
+            'password' => ['nullable', 'confirmed', 'string', 'min:6', 'regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/',],
         ];
     }
 }

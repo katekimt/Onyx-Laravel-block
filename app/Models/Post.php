@@ -8,6 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     use HasFactory;
+
     protected $table = 'pages';
+
     protected $guarded = [];
+
+    protected $fillable = ['title', 'keywords', 'text', 'file'];
+
+    public function tag()
+    {
+        return $this->belongsToMany(Tag::class, 'post_tag');
+    }
 }

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
-use App\Models\Post;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\PostResource;
+use App\Models\Post;
+use Illuminate\Http\Response;
 
 class PostController extends Controller
 {
@@ -18,7 +18,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        echo '1';
+        return PostResource::collection(Post::all());
     }
 
 
@@ -30,18 +30,23 @@ class PostController extends Controller
      */
 
 
-    public function show()
+    public function show($id): PostResource|\Illuminate\Http\Response
     {
-        $posts = Post::paginate(3);
-        // dd($posts);
-        return view('index', compact('posts'));
+        /* $posts = Post::paginate(3);
+         return view('index', compact('posts'));*/
+        return new PostResource(Post::findOrFail($id));
     }
 
 
-    public function update($id)
+    public function update(PostRequest $request, Post $post): PostResource
     {
-        $post = new Post;
+        /*$post = new Post;
         return view('update-post', ['post' => $post->find($id)]);
+         */
+
+        $post->update($request->validated());
+        return new PostResource($post);
+
     }
 
     /**
@@ -52,26 +57,32 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
     public function store(PostRequest $request)
     {
-        $post = new Post();
-        if ($request->hasFile('file')) {
-            $file = $request->file('file');
-            $path = $file->store('files');
-            $post->create(['file' => 'storage/public/files/' . $path,
-                'title' => $request->input('title'),
-                'keywords' => $request->input('keywords'),
-                'text' => $request->input('text')]);
-        } else {
-            $post->title = $request->input('title');
-            $post->keywords = $request->input('keywords');
-            $post->text = $request->input('text');
-            $post->save();
-        }
-        return redirect()->route('ok')->with('success', "Data has been added");
+        $created_post = Post::create($request->validated());
+        return new PostResource($created_post);
+
+        /* $post = new Post();
+         if ($request->hasFile('file')) {
+             $file = $request->file('file');
+             $path = $file->store('files');
+             $post->create(['file' => 'storage/public/files/' . $path,
+                 'title' => $request->input('title'),
+                 'keywords' => $request->input('keywords'),
+                 'text' => $request->input('text')]);
+         } else {
+             $post->title = $request->input('title');
+             $post->keywords = $request->input('keywords');
+             $post->text = $request->input('text');
+             $post->save();
+         }
+         return redirect()->route('ok')->with('success', "Data has been added");*/
+
+
     }
 
     public function showOnePost($id)
@@ -103,15 +114,11 @@ class PostController extends Controller
     public function findPost()
     {
         $keywords = 'title';
-        $query = PostResource::collection(Post::where('title', 'like', $keywords . '%')
-            ->orWhere('title', 'like', '%' . $keywords . '%')
-            ->orWhere('title', 'like', '%' . $keywords)
-            ->orWhere('text', 'like', '%' . $keywords . '%')
-            ->where('text', 'like', $keywords . '%')
+        $query = Post::where('title', 'like', '%' . $keywords . '%')
             ->orWhere('text', 'like', '%' . $keywords . '%')
             ->limit(2)
-            ->get());
-        return $query;
+            ->get();
+        return PostResource::collection($query);
     }
 
 
