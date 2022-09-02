@@ -3,9 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use App\Http\Resources\TagResource;
 
-class PostResource extends JsonResource
+class TagResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,10 +16,7 @@ class PostResource extends JsonResource
     {
         return [
             'id'=>$this->id,
-            'title' => $this->title,
-            'keywords' => $this->keywords,
-            'text' => $this->text,
-            'tags'=> TagResource::collection($this->tag),
+            'name'=>$this->name,
         ];
     }
 }

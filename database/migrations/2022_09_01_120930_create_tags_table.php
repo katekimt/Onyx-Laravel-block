@@ -13,13 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pages', function (Blueprint $table) {
-            $table->id();
-            $table->string('title');
-            $table->string('keywords');
-            $table->text('text');
-            $table->string('file')->nullable();
-            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
+        Schema::create('tags', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name')->nullable();
             $table->timestamps();
         });
     }
@@ -31,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pages');
+        Schema::dropIfExists('tags');
     }
 };

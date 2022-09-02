@@ -9,11 +9,12 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $table = 'pages';
+    protected $table = 'posts';
 
     protected $guarded = [];
 
     protected $fillable = ['title', 'keywords', 'text', 'file'];
+
 
     public function tag()
     {
