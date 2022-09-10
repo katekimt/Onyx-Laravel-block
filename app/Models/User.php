@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Http\Requests\UserRequest;
+use App\Http\Resources\UserResource;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -43,9 +45,30 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function posts(){
+    public function posts(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
         return $this->hasMany(Post::class);
     }
+
+    public function scopeGetUser(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    {
+        return UserResource::collection(User::all());
+    }
+
+    public function scopeFindEmail($query, $word)
+    {
+        return $query->where('email', 'like', $word . '%')
+            ->orWhere('email', 'like', '%' . $word . '%')
+            ->get();
+
+    }
+
+    public function scopeFindPostByUser($query, $id)
+    {
+         return  $query->whereHas('posts')->findOrFail($id);
+    }
+
+
 
 
 }

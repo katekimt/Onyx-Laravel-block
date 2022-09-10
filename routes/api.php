@@ -24,7 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/email/find/{word}',[UserController::class,'findEmail']);
 
-Route::get('/post/find',[PostController::class, 'findPost']);
+Route::get('/post/find/{keywords}',[PostController::class, 'findPost']);
 
 Route::get('/find/{id}',[UserController::class, 'findPostByUser']);
 /*

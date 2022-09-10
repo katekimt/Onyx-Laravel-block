@@ -13,7 +13,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        return UserResource::collection(User::all());
+        return User::GetUser();
     }
 
     public function update(UserRequest $request, User $user)
@@ -22,17 +22,14 @@ class UserController extends Controller
         return new UserResource($user);
     }
 
-    public function findEmail($word): AnonymousResourceCollection
+    public function findEmail($word)
     {
-        $query = User::where('email', 'like', $word . '%')
-            ->orWhere('email', 'like', '%' . $word . '%')
-            ->get();
-        return UserResource::collection($query);
+        return UserResource::collection(User::FindEmail($word));
     }
 
     public function findPostByUser($id): UserResource
     {
-        return new UserResource(User::with('posts')->findOrFail($id));
+        return new UserResource(User::FindPostByUser($id));
     }
 
     public function store(UserRequest $request): UserResource

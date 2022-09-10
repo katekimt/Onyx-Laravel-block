@@ -18,7 +18,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        return PostResource::collection(Post::all());
+        return PostResource::collection(Post::GetPosts());
     }
 
 
@@ -34,7 +34,8 @@ class PostController extends Controller
     {
         /* $posts = Post::paginate(3);
          return view('index', compact('posts'));*/
-        return new PostResource(Post::findOrFail($id));
+        //return new PostResource(Post::findOrFail($id));
+        return new PostResource(Post::Show($id));
     }
 
 
@@ -111,14 +112,15 @@ class PostController extends Controller
 
     }
 
-    public function findPost()
+    public function findPost($keywords)
     {
-        $keywords = 'title';
-        $query = Post::where('title', 'like', '%' . $keywords . '%')
+
+        /*$query = Post::where('title', 'like', '%' . $keywords . '%')
             ->orWhere('text', 'like', '%' . $keywords . '%')
             ->limit(2)
             ->get();
-        return PostResource::collection($query);
+        return PostResource::collection($query);*/
+        return PostResource::collection(Post::FindPost($keywords));
     }
 
 
