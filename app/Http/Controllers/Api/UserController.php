@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Requests\UserRequest;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -34,7 +35,14 @@ class UserController extends Controller
 
     public function store(UserRequest $request): UserResource
     {
-        $created_user = User::create($request->validated());
+
+        $created_user = User::create(
+            [
+                'name' => $request['name'],
+                'email' => $request['email'],
+                'password' => Hash::make($request['password']),
+            ]
+        );
         return new UserResource($created_user);
     }
 

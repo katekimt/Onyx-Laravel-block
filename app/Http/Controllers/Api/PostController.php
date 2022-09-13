@@ -31,7 +31,7 @@ class PostController extends Controller
      */
 
 
-    public function show($id): PostResource|\Illuminate\Http\Response
+    public function show($id): PostResource|Response
     {
         /* $posts = Post::paginate(3);
          return view('index', compact('posts'));*/

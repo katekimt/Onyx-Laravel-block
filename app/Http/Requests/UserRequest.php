@@ -28,7 +28,7 @@ class UserRequest extends FormRequest
 
         return [
             'name' => 'required',
-            'email' => 'required|email|unique:contacts,email',
+            'email' => 'required|email|unique:users,email',
             'password' => ['nullable', 'confirmed', 'string', 'min:6', 'regex:/[a-z]/', 'regex:/[A-Z]/', 'regex:/[0-9]/',],
         ];
     }
