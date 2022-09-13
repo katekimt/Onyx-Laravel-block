@@ -28,6 +28,7 @@ class PostRequest extends FormRequest
             'keywords' => 'nullable',
             'text'=>'required|min:10',
             'file'=>'image:jpeg,gif,png|nullable',
+            'user_id'=>'nullable|integer'
 
         ];
     }

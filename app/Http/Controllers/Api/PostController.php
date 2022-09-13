@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PostRequest;
 use App\Http\Resources\PostResource;
 use App\Models\Post;
+use App\Observers\PostObserver;
 use Illuminate\Http\Response;
 
 class PostController extends Controller
@@ -64,8 +65,9 @@ class PostController extends Controller
 
     public function store(PostRequest $request)
     {
-        $created_post = Post::create($request->validated());
-        return new PostResource($created_post);
+        /* $created_post = Post::create($request->validated());
+        return new PostResource($created_post);*/
+        return new PostResource(Post::Store($request));
 
         /* $post = new Post();
          if ($request->hasFile('file')) {

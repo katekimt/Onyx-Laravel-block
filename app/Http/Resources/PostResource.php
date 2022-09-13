@@ -20,6 +20,7 @@ class PostResource extends JsonResource
             'title' => $this->title,
             'keywords' => $this->keywords,
             'text' => $this->text,
+            'user_id' => $this->user_id,
             'tags'=> TagResource::collection($this->tag),
         ];
     }
