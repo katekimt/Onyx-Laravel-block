@@ -9,6 +9,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Http\Requests\UserRequest;
 use Illuminate\Support\Facades\Hash;
+use App\Events\UserStored;
 
 class UserController extends Controller
 {
@@ -33,17 +34,20 @@ class UserController extends Controller
         return new UserResource(User::FindPostByUser($id));
     }
 
-    public function store(UserRequest $request): UserResource
+    public function store(UserRequest $request)
     {
 
         $created_user = User::create(
             [
-                'name' => $request['name'],
+                'first_name' => $request['first_name'],
+                'last_name' => $request['last_name'],
                 'email' => $request['email'],
                 'password' => Hash::make($request['password']),
             ]
         );
+        event(new UserStored($created_user));
         return new UserResource($created_user);
+
     }
 
     public function show(User $user): UserResource

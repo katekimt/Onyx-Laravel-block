@@ -17,9 +17,11 @@ class UserResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'first_name' => $this->first_name,
             'email' => $this->email,
             'total_posts' => $this->total_posts,
+            'full_name' => $this->full_name,
+            'last_name' => $this->last_name,
             'posts'=> PostResource::collection($this->posts),
         ];
     }

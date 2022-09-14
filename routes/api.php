@@ -38,3 +38,5 @@ Route::apiResources([
     'posts' => PostController::class,
     'users' => UserController::class,
 ]);
+
+//Route::resource('users', UserController::class);
