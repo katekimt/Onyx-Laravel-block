@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Events\UserStored;
+
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -12,6 +12,7 @@ use App\Models\Post;
 use App\Models\User;
 use App\Observers\UserObserver;
 use App\Listeners\SendMailNewUser;
+use App\Events\UserStored;
 
 class EventServiceProvider extends ServiceProvider
 {

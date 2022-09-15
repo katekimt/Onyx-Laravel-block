@@ -3,11 +3,13 @@
 namespace App\Listeners;
 
 use App\Events\UserStored;
+use App\Mail\WelcomeEmail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Mail\Mailable;
 
-class SendMailNewUser
+class SendMailNewUser extends Mailable
 {
     /**
      * Create the event listener.
@@ -27,6 +29,6 @@ class SendMailNewUser
      */
     public function handle(UserStored $event)
     {
-        Mail::to($event->user->email)->send(new UserStored($event->user));
+        Mail::to($event->user)->send(new WelcomeEmail());
     }
 }

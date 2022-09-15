@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Events\UserStored;
 
 
 class User extends Authenticatable
@@ -29,6 +30,10 @@ class User extends Authenticatable
         'total_posts',
         'last_name',
         'full_name'
+    ];
+
+    protected $dispatchesEvents = [
+        'created' =>  UserStored::class,
     ];
 
     /**
